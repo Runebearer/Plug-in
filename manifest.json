@@ -1,0 +1,12 @@
+{
+  "manifest_version": 3,
+  "name": "Test Widget",
+  "version": "1.0",
+  "description": "Test d’injection de widget en bas à droite",
+  "content_scripts": [
+    {
+      "matches": ["<all_urls>"],
+      "js": ["content.js"]
+    }
+  ]
+}
