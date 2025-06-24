@@ -1,9 +1,9 @@
 console.log("✅ content.js injecté");
 
-fetch(chrome.runtime.getURL("widget.html"))
+fetch(chrome.runtime.getURL("overlay.html"))
   .then(res => {
     if (!res.ok) {
-      throw new Error(`Erreur de chargement du widget.html : ${res.statusText}`);
+      throw new Error(`Erreur de chargement du overlay.html : ${res.statusText}`);
     }
     return res.text();
   })
@@ -15,12 +15,12 @@ fetch(chrome.runtime.getURL("widget.html"))
     // Charger CSS
     const style = document.createElement("link");
     style.rel = "stylesheet";
-    style.href = chrome.runtime.getURL("widget.css");
+    style.href = chrome.runtime.getURL("overlay.css");
     document.head.appendChild(style);
 
     // Charger JS
     const script = document.createElement("script");
-    script.src = chrome.runtime.getURL("widget.js");
+    script.src = chrome.runtime.getURL("overlay.js");
     document.body.appendChild(script);
 
     console.log("✅ Widget injecté !");
