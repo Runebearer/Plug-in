@@ -1,8 +1,8 @@
-.water-drop {
+#my-extension-widget {
   width: 150px;
   height: 200px;
-  left: 20px; /* Default starting position if JS doesn't override */
-  top: 20px;  /* Default starting position if JS doesn't override */
+  left: 20px; /* Default starting position */
+  top: 20px;  /* Default starting position */
   padding: 8px;
   background: rgba(255, 255, 255, 0.2); /* Transparence */
   border-radius: 10%; /* Forme de goutte */
@@ -17,5 +17,5 @@
   cursor: move; /* Indicate draggability */
   user-select: none; /* Prevent text selection when dragging */
   position: fixed;
-  margin: 50px auto;
+  /* margin: 50px auto; Removed as it conflicts with JS positioning */
 }
