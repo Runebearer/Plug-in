@@ -1,13 +1,30 @@
 console.log("✅ content.js injecté");
 
-const testDiv = document.createElement('div');
-testDiv.innerText = "Ceci est un test de widget";
-testDiv.style.position = 'fixed';
-testDiv.style.bottom = '10px';
-testDiv.style.right = '10px';
-testDiv.style.background = 'white';
-testDiv.style.padding = '10px';
-testDiv.style.border = '1px solid #ccc';
-testDiv.style.zIndex = '9999';
+fetch(chrome.runtime.getURL("widget.html"))
+  .then(res => {
+    if (!res.ok) {
+      throw new Error(`Erreur de chargement du widget.html : ${res.statusText}`);
+    }
+    return res.text();
+  })
+  .then(html => {
+    const wrapper = document.createElement("div");
+    wrapper.innerHTML = html;
+    document.body.appendChild(wrapper);
 
-document.body.appendChild(testDiv);
+    // Charger CSS
+    const style = document.createElement("link");
+    style.rel = "stylesheet";
+    style.href = chrome.runtime.getURL("widget.css");
+    document.head.appendChild(style);
+
+    // Charger JS
+    const script = document.createElement("script");
+    script.src = chrome.runtime.getURL("widget.js");
+    document.body.appendChild(script);
+
+    console.log("✅ Widget injecté !");
+  })
+  .catch(err => {
+    console.error("💥 Erreur lors de l’injection du widget :", err);
+  });

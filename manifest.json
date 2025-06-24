@@ -3,10 +3,19 @@
   "name": "Test Widget",
   "version": "1.0",
   "description": "Test d’injection de widget en bas à droite",
+  "icons": {
+    "128": "icons/icon128.png"
+  },
   "content_scripts": [
     {
       "matches": ["<all_urls>"],
       "js": ["content.js"]
+    }
+  ],
+  "web_accessible_resources": [
+    {
+      "resources": ["widget.html", "widget.css", "widget.js"],
+      "matches": ["<all_urls>"]
     }
   ]
 }
