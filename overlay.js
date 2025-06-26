@@ -29,10 +29,44 @@ function loadWidgetPosition() {
 // Load position when the script runs
 loadWidgetPosition();
 
-// Original functionality: Count 'e's in URL
-const url = window.location.href;
-const count = (url.match(/e/gi) || []).length;
-textWidget.innerText = `🔡 Nombre de "e" dans l'URL : ${count}`;
+// Fonction pour mettre à jour le widget (compte les 'e' dans l'URL)
+function updateWidgetText() {
+  const url = window.location.href;
+  const count = (url.match(/e/gi) || []).length;
+  textWidget.innerText = `🔡 Nombre de "e" dans l'URL : ${count}`;
+}
+
+// Appel initial
+updateWidgetText();
+
+// Surveille les changements d'URL (y compris pushState/replaceState)
+function observeUrlChanges(callback) {
+  let lastUrl = location.href;
+  new MutationObserver(() => {
+    const url = location.href;
+    if (url !== lastUrl) {
+      lastUrl = url;
+      callback();
+    }
+  }).observe(document, {subtree: true, childList: true});
+
+  window.addEventListener('popstate', callback);
+  window.addEventListener('hashchange', callback);
+
+  // Patch pushState et replaceState
+  const pushState = history.pushState;
+  const replaceState = history.replaceState;
+  history.pushState = function () {
+    pushState.apply(this, arguments);
+    callback();
+  };
+  history.replaceState = function () {
+    replaceState.apply(this, arguments);
+    callback();
+  };
+}
+
+observeUrlChanges(updateWidgetText);
 
 // Drag and drop functionality
 let isDragging = false;
