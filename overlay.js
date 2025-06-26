@@ -1,6 +1,13 @@
 const widget = document.getElementById("my-extension-widget");
 const textWidget = document.getElementById("text-widget");
 
+// Ajout d'un style par défaut pour garantir la visibilité et le drag & drop
+widget.style.position = "fixed";
+widget.style.right = "20px";
+widget.style.bottom = "20px";
+widget.style.zIndex = "2147483647";
+widget.style.cursor = "move";
+
 // Function to load and apply stored position
 function loadWidgetPosition() {
   try {

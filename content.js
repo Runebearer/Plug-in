@@ -1,29 +1,23 @@
 console.log("✅ content.js injecté");
 
+// 1. Charger le HTML du widget
 fetch(chrome.runtime.getURL("overlay.html"))
-  .then(res => {
-    if (!res.ok) {
-      throw new Error(`Erreur de chargement du overlay.html : ${res.statusText}`);
-    }
-    return res.text();
-  })
+  .then(response => response.text())
   .then(html => {
-    const wrapper = document.createElement("div");
-    wrapper.innerHTML = html;
-    document.body.appendChild(wrapper);
+    const container = document.createElement("div");
+    container.innerHTML = html;
+    document.body.appendChild(container);
 
-    // Charger CSS
-    const style = document.createElement("link");
-    style.rel = "stylesheet";
-    style.href = chrome.runtime.getURL("overlay.css");
-    document.head.appendChild(style);
+    // 2. Mettre à jour l'image avec l'URL de l'extension
+    const widgetImage = document.getElementById("heroImg");
+    if (widgetImage) {
+      widgetImage.src = chrome.runtime.getURL("images/paras.webp");
+    }
 
-    // Charger JS
+    // 3. Charger le JS du widget dans le même contexte
     const script = document.createElement("script");
     script.src = chrome.runtime.getURL("overlay.js");
     document.body.appendChild(script);
-
-    console.log("✅ Widget injecté !");
   })
   .catch(err => {
     console.error("💥 Erreur lors de l’injection du widget :", err);
