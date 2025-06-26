@@ -13,11 +13,7 @@ fetch(chrome.runtime.getURL("overlay.html"))
     if (widgetImage) {
       widgetImage.src = chrome.runtime.getURL("images/paras.webp");
     }
-
-    // 3. Charger le JS du widget dans le même contexte
-    const script = document.createElement("script");
-    script.src = chrome.runtime.getURL("overlay.js");
-    document.body.appendChild(script);
+    // Ne pas injecter overlay.js ici : il est déjà déclaré comme content_script dans le manifest.json
   })
   .catch(err => {
     console.error("💥 Erreur lors de l’injection du widget :", err);
