@@ -1,0 +1,11 @@
+#my-extension-widget {
+  width: 200px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  padding: 10px;
+  background-color: #f9f9f9;
+}
+
+.heroImg {
+  width: 100%;
+}
