@@ -1,7 +1,7 @@
 console.log("✅ content.js injecté");
 
 // 1. Charger le HTML du widget
-fetch(chrome.runtime.getURL("overlay.html"))
+fetch(chrome.runtime.getURL("overlay/overlay.html"))
   .then(response => response.text())
   .then(html => {
     const container = document.createElement("div");
