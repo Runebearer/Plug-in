@@ -1,7 +1,7 @@
 const widget = document.getElementById("my-extension-widget");
-const textWidget = document.getElementById("text-widget");
+const statsContainer = document.getElementById("stats-container");
 
-// Ajout d'un style par défaut pour garantir la visibilité et le drag & drop
+// Default style for visibility and drag & drop
 widget.style.position = "fixed";
 widget.style.right = "20px";
 widget.style.bottom = "20px";
@@ -29,10 +29,23 @@ function loadWidgetPosition() {
 // Load position when the script runs
 loadWidgetPosition();
 
-// Original functionality: Count 'e's in URL
-const url = window.location.href;
-const count = (url.match(/e/gi) || []).length;
-textWidget.innerText = `🔡 Nombre de "e" dans l'URL : ${count}`;
+// Fetch and display stats
+fetch(chrome.runtime.getURL("stats/paras.json"))
+  .then(response => response.json())
+  .then(data => {
+    const level1Stats = data.find(stats => stats.Level === 1);
+    if (level1Stats) {
+      for (const [key, value] of Object.entries(level1Stats)) {
+        const statElement = document.createElement("p");
+        statElement.innerText = `${key}: ${value}`;
+        statsContainer.appendChild(statElement);
+      }
+    }
+  })
+  .catch(err => {
+    console.error("💥 Error loading stats:", err);
+    statsContainer.innerText = "Error loading stats.";
+  });
 
 // Drag and drop functionality
 let isDragging = false;

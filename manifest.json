@@ -14,7 +14,7 @@
   ],
   "web_accessible_resources": [
     {
-      "resources": ["overlay.html", "overlay.css", "overlay.js", "images/paras.webp"],
+      "resources": ["overlay.html", "overlay.css", "overlay.js", "images/paras.webp", "stats/paras.json"],
       "matches": ["<all_urls>"]
     }
   ]
