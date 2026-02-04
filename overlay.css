@@ -1,22 +1,69 @@
 #my-extension-widget {
-  width: 150px;
-  height: 200px;
-  left: 20px; /* Default starting position */
-  top: 20px;  /* Default starting position */
-  padding: 8px;
-  background: rgba(255, 255, 255, 0.2); /* Transparence */
-  border-radius: 10%; /* Forme de goutte */
-  backdrop-filter: blur(10px); /* Effet de flou du fond */
-  -webkit-backdrop-filter: blur(10px); /* Compatibilité Safari */
-  border: 1px solid rgba(255, 255, 255, 0.3); /* Liseré blanc discret */
-  box-shadow:
-    inset 0 0 10px rgba(255, 255, 255, 0.4),
-    0 4px 10px rgba(0, 0, 0, 0.1); /* Légère brillance et ombre */
-  z-index: 9999;
-  text-align: center;
-  cursor: move; /* Indicate draggability */
-  user-select: none; /* Prevent text selection when dragging */
+  /* CSS Reset pour isolation complète */
+  all: initial;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  box-sizing: border-box;
+  color: #fff;
+  /* Texte blanc pour meilleur contraste sur fond sombre */
+
+  width: 170px;
+  /* Plus large */
+  height: auto;
+
+  left: 20px;
+  top: 20px;
+  padding: 20px;
+
+  /* Fond plus sombre mais translucide (Dark Glass) */
+  background: rgba(20, 20, 20, 0.75);
+  border-radius: 24px;
+
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.5);
+
+  z-index: 2147483647;
+  cursor: move;
+  user-select: none;
   position: fixed;
-  visibility: hidden; /* Hide initially to prevent flicker */
-  /* margin: 50px auto; Removed as it conflicts with JS positioning */
+  visibility: hidden;
+
+  /* Transition douce pour les effets */
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+#my-extension-widget:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 12px 40px 0 rgba(0, 0, 0, 0.6);
+  border-color: rgba(255, 255, 255, 0.5);
+}
+
+/* Styles pour l'image */
+#my-extension-widget .heroImg {
+  object-fit: cover;
+  border-radius: 50%;
+  margin-bottom: 20px;
+  display: block;
+  pointer-events: none;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.5);
+}
+
+/* Styles pour le texte */
+#my-extension-widget #text-widget {
+  margin: 0;
+  padding: 0;
+  font-size: 14px;
+  /* Plus grand */
+  font-weight: 600;
+  line-height: 1.5;
+  text-align: center;
+  width: 100%;
+  word-wrap: break-word;
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.8);
 }

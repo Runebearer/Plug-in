@@ -1,11 +1,14 @@
 // Attendre que le widget soit présent dans le DOM avant d'exécuter la logique
 function onWidgetReady(callback) {
   const tryInit = () => {
-    const widget = document.getElementById("my-extension-widget");
-    const textWidget = document.getElementById("text-widget");
-    if (widget && textWidget) {
-      callback(widget, textWidget);
-      return true;
+    const host = document.getElementById("my-extension-host");
+    if (host && host.shadowRoot) {
+      const widget = host.shadowRoot.getElementById("my-extension-widget");
+      const textWidget = host.shadowRoot.getElementById("text-widget");
+      if (widget && textWidget) {
+        callback(widget, textWidget);
+        return true;
+      }
     }
     return false;
   };
@@ -94,8 +97,10 @@ onWidgetReady((widget, textWidget) => {
   observeUrlChanges(updateWidgetText);
 
   // Drag and drop functionality
+  // State variables (hoisted for safety)
   let isDragging = false;
   let offsetX, offsetY;
+
 
   widget.addEventListener("mousedown", (e) => {
     isDragging = true;
@@ -137,13 +142,20 @@ onWidgetReady((widget, textWidget) => {
       widget.style.cursor = "move"; // Optional: revert cursor
 
       // Save position to chrome.storage
+      if (!chrome.runtime?.id) {
+        // Extension context invalidated, stop here
+        return;
+      }
       try {
         chrome.runtime.sendMessage({
           type: 'setWidgetPosition',
           left: widget.style.left,
           top: widget.style.top
         }, (response) => {
-          // Optionnel : traiter la réponse
+          if (chrome.runtime.lastError) {
+            // Silently handle error (e.g. context invalidated)
+            return;
+          }
         });
       } catch (error) {
         console.error("Error saving widget position to chrome.storage:", error);
