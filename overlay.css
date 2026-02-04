@@ -17,5 +17,6 @@
   cursor: move; /* Indicate draggability */
   user-select: none; /* Prevent text selection when dragging */
   position: fixed;
+  visibility: hidden; /* Hide initially to prevent flicker */
   /* margin: 50px auto; Removed as it conflicts with JS positioning */
 }

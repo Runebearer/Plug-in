@@ -13,7 +13,7 @@ function onWidgetReady(callback) {
     const observer = new MutationObserver(() => {
       if (tryInit()) observer.disconnect();
     });
-    observer.observe(document.body, {childList: true, subtree: true});
+    observer.observe(document.body, { childList: true, subtree: true });
   }
 }
 
@@ -28,9 +28,11 @@ onWidgetReady((widget, textWidget) => {
   // Fonction pour charger la position depuis le background (chrome.storage)
   function loadWidgetPosition() {
     try {
-      chrome.runtime.sendMessage({type: 'getWidgetPosition'}, (response) => {
+      chrome.runtime.sendMessage({ type: 'getWidgetPosition' }, (response) => {
         if (chrome.runtime.lastError) {
           console.error("Error loading widget position from chrome.storage:", chrome.runtime.lastError.message);
+          // Show widget anyway in default position
+          widget.style.visibility = "visible";
           return;
         }
         if (response && response.left && response.top) {
@@ -39,7 +41,8 @@ onWidgetReady((widget, textWidget) => {
           widget.style.right = "auto";
           widget.style.bottom = "auto";
         }
-        // Pas d'erreur si la position n'est pas encore enregistrée
+        // Make widget visible after positioning
+        widget.style.visibility = "visible";
       });
     } catch (error) {
       console.error("Error loading widget position from chrome.storage:", error);
@@ -48,6 +51,23 @@ onWidgetReady((widget, textWidget) => {
 
   // Load position when the script runs
   loadWidgetPosition();
+
+  // Listen for position changes from other tabs/windows
+  chrome.storage.onChanged.addListener((changes, namespace) => {
+    if (namespace === 'sync' && !isDragging) {
+      if (changes.widgetStoredLeft || changes.widgetStoredTop) {
+        const newLeft = changes.widgetStoredLeft?.newValue;
+        const newTop = changes.widgetStoredTop?.newValue;
+
+        if (newLeft && newTop) {
+          widget.style.left = newLeft;
+          widget.style.top = newTop;
+          widget.style.right = "auto";
+          widget.style.bottom = "auto";
+        }
+      }
+    }
+  });
 
   // Fonction pour mettre à jour le widget (compte les 'e' dans l'URL)
   function updateWidgetText() {
@@ -59,7 +79,7 @@ onWidgetReady((widget, textWidget) => {
   // Appel initial
   updateWidgetText();
 
-  // Surveille les changements d'URL (y compris pushState/replaceState)
+  // Surveille les changements d'URL (efficace même pour les SPA via MutationObserver)
   function observeUrlChanges(callback) {
     let lastUrl = location.href;
     new MutationObserver(() => {
@@ -68,22 +88,7 @@ onWidgetReady((widget, textWidget) => {
         lastUrl = url;
         callback();
       }
-    }).observe(document, {subtree: true, childList: true});
-
-    window.addEventListener('popstate', callback);
-    window.addEventListener('hashchange', callback);
-
-    // Patch pushState et replaceState
-    const pushState = history.pushState;
-    const replaceState = history.replaceState;
-    history.pushState = function () {
-      pushState.apply(this, arguments);
-      callback();
-    };
-    history.replaceState = function () {
-      replaceState.apply(this, arguments);
-      callback();
-    };
+    }).observe(document, { subtree: true, childList: true });
   }
 
   observeUrlChanges(updateWidgetText);
